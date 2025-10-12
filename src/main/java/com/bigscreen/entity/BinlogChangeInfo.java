@@ -41,9 +41,4 @@ public class BinlogChangeInfo {
      */
     private Long operatorTime;
 
-    private String dataSource;
-
-    private String sourceHost;
-
-
 }
