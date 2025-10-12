@@ -1,0 +1,68 @@
+server:
+  port: 10001
+
+spring:
+  application:
+    name: big-screen
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/big_screen1?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai
+    username: root
+    password: xu.123456
+
+# mybatis配置
+mybatis:
+  mapper-locations: classpath:mapper/*.xml #mapper文件路径
+  type-aliases-package: com.bigscreen.entity #实体类路径
+  configuration:
+    map-underscore-to-camel-case: true #开启驼峰命名
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl #打印sql日志
+    cache-enabled: true #开启二级缓存
+#
+#cdc:
+#  sources:
+#    source1:
+#      host: localhost
+#      port: 3306
+#      username: root
+#      password: xu.123456
+#      databases: big_screen1
+#      tables: big_screen1.order
+#    source2:
+#      host: 122.112.192.164
+#      port: 3306
+#      username: root
+#      password: xu.123456
+#      databases: big_screen1
+#      tables: big_screen1.order
+
+cdc:
+  sources:
+    primary-db:  # 给每个数据源一个明确的名称
+      ip: localhost
+      port: 3306
+      username: root
+      password: xu.123456
+      databases:
+        - big_screen1
+      tables:
+        - big_screen1.order
+      parallelism: 2
+      description: "big_screen1"
+
+    inventory-db:
+      ip: 122.112.192.164
+      port: 3306
+      username: root
+      password: xu.123456
+      databases:
+        - big_screen2
+      tables:
+        - big_screen2.order
+      server-time-zone: "UTC"
+      parallelism: 2
+      description: "big_screen2"
